@@ -1,0 +1,30 @@
+name: UI tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      BASE_URL: ${{ vars.BASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pull Chrome image for Selenoid
+        run: docker pull selenoid/chrome:128.0
+
+      - name: Run tests in Docker Compose
+        run: docker compose up --build --abort-on-container-exit --exit-code-from tests
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure_results
+
+      - name: Stop containers
+        if: always()
+        run: docker compose down

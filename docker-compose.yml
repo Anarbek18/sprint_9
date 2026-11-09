@@ -1,0 +1,23 @@
+services:
+  selenoid:
+    image: aerokube/selenoid:latest-release
+    volumes:
+      - ./selenoid:/etc/selenoid
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["-conf", "/etc/selenoid/browsers.json", "-container-network", "sprint9-net"]
+    ports:
+      - "4444:4444"
+
+  tests:
+    build: .
+    depends_on:
+      - selenoid
+    environment:
+      SELENIUM_URL: http://selenoid:4444/wd/hub
+      BASE_URL: ${BASE_URL}
+    volumes:
+      - ./allure_results:/app/allure_results
+
+networks:
+  default:
+    name: sprint9-net
