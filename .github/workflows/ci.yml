@@ -8,9 +8,16 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     env:
-      BASE_URL: ${{ vars.BASE_URL }}
+      BASE_URL: ${{ vars.BASE_URL || secrets.BASE_URL }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Check BASE_URL
+        run: |
+          if [ -z "$BASE_URL" ]; then
+            echo "::error::BASE_URL не задан. Settings → Secrets and variables → Actions → Variables → New repository variable"
+            exit 1
+          fi
 
       - name: Pull Chrome image for Selenoid
         run: docker pull selenoid/chrome:128.0
@@ -18,12 +25,17 @@ jobs:
       - name: Run tests in Docker Compose
         run: docker compose up --build --abort-on-container-exit --exit-code-from tests
 
+      - name: Copy Allure results
+        if: always()
+        run: docker compose cp tests:/app/allure_results ./allure_results || true
+
       - name: Upload Allure results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-results
           path: allure_results
+          if-no-files-found: ignore
 
       - name: Stop containers
         if: always()

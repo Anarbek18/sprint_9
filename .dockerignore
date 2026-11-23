@@ -1,9 +1,13 @@
 .git
 .github
+.gitlab-ci.yml
 __pycache__
 .pytest_cache
 allure_results
 allure_report
 venv
+.venv
+htmlcov
 .idea
 .vscode
+selenoid

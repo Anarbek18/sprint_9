@@ -1,7 +1,15 @@
 import os
 
-# Адрес тестируемого сервиса «Продуктовый помощник»
-BASE_URL = os.getenv("BASE_URL", "https://foodgram-your-domain.example").rstrip("/")
+# Адрес тестируемого сервиса «Продуктовый помощник».
+# Обязательная переменная окружения BASE_URL, например https://my-foodgram.example
+BASE_URL = os.getenv("BASE_URL", "").strip().rstrip("/")
+if not BASE_URL.startswith(("http://", "https://")):
+    raise RuntimeError(
+        "Переменная окружения BASE_URL не задана или задана без http(s)://. "
+        "Укажите адрес сервиса: GitHub — Settings → Secrets and variables → Actions → Variables; "
+        "GitLab — Settings → CI/CD → Variables."
+    )
+
 # Адрес Selenoid. Если не задан, тесты запускаются в локальном Chrome
 SELENIUM_URL = os.getenv("SELENIUM_URL")
 

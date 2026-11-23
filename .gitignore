@@ -1,7 +1,10 @@
-__pycache__/
-.pytest_cache/
-allure_results/
-venv/
-.venv/
+.coverage
 .idea/
+.pytest_cache/
+.venv/
 .vscode/
+__pycache__/
+allure_report/
+allure_results/
+htmlcov/
+venv/

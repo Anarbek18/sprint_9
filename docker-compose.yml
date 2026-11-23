@@ -1,8 +1,7 @@
 services:
   selenoid:
-    image: aerokube/selenoid:latest-release
+    build: ./selenoid
     volumes:
-      - ./selenoid:/etc/selenoid
       - /var/run/docker.sock:/var/run/docker.sock
     command: ["-conf", "/etc/selenoid/browsers.json", "-container-network", "sprint9-net"]
     ports:
@@ -14,9 +13,7 @@ services:
       - selenoid
     environment:
       SELENIUM_URL: http://selenoid:4444/wd/hub
-      BASE_URL: ${BASE_URL}
-    volumes:
-      - ./allure_results:/app/allure_results
+      BASE_URL: ${BASE_URL:?Переменная BASE_URL не задана}
 
 networks:
   default:

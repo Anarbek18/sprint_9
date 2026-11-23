@@ -14,3 +14,10 @@ allure generate allure_results -o allure_report --clean
 docker pull selenoid/chrome:128.0
 BASE_URL=https://<адрес сервиса> docker compose up --build --abort-on-container-exit --exit-code-from tests
 ```
+
+## CI/CD
+Обязательная переменная `BASE_URL` (адрес сервиса, с `https://`):
+- GitHub: Settings → Secrets and variables → Actions → **Variables** → `BASE_URL`
+- GitLab: Settings → CI/CD → **Variables** → `BASE_URL`
+
+Пайплайны: `.github/workflows/ci.yml` и `.gitlab-ci.yml`. Отчёт Allure сохраняется как артефакт `allure_results`.
