@@ -3,6 +3,9 @@ services:
     build: ./selenoid
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      # Selenoid по умолчанию ходит в Docker по API 1.24, а новые Docker требуют >= 1.40
+      DOCKER_API_VERSION: ${DOCKER_API_VERSION:-1.44}
     command: ["-conf", "/etc/selenoid/browsers.json", "-container-network", "sprint9-net"]
     ports:
       - "4444:4444"
