@@ -17,6 +17,8 @@ services:
     environment:
       SELENIUM_URL: http://selenoid:4444/wd/hub
       BASE_URL: ${BASE_URL:-https://foodgram-frontend-1.foodgram.education-services.ru}
+      # Необязательно: если API на другом адресе, чем BASE_URL с заменой frontend->backend
+      API_URL: ${API_URL:-}
 
 networks:
   default:

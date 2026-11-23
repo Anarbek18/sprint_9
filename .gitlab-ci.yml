@@ -10,6 +10,8 @@ ui-tests:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
     BASE_URL: "https://foodgram-frontend-1.foodgram.education-services.ru"
+    # Необязательно: адрес бэкенда API. По умолчанию выводится из BASE_URL (frontend → backend)
+    API_URL: ""
   before_script:
     - |
       if [ -z "$BASE_URL" ]; then

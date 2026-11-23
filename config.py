@@ -18,4 +18,15 @@ LOGIN_URL = f"{BASE_URL}/signin"
 CREATE_RECIPE_URL = f"{BASE_URL}/recipes/create"
 MAIN_URL_PATTERN = r"/(recipes/?)?$"
 
-API_USERS = f"{BASE_URL}/api/users/"
+# Адрес API. По умолчанию выводится из BASE_URL заменой поддомена
+# frontend на backend, но можно переопределить переменной окружения API_URL.
+API_URL = os.getenv("API_URL", "").strip().rstrip("/")
+if not API_URL:
+    API_URL = BASE_URL.replace("frontend", "backend", 1)
+if not API_URL.startswith(("http://", "https://")):
+    raise RuntimeError(
+        "Переменная окружения API_URL задана без http(s)://. "
+        "Укажите адрес API, например https://my-foodgram-backend.example"
+    )
+
+API_USERS = f"{API_URL}/api/users/"
