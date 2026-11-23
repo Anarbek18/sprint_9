@@ -8,7 +8,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     env:
-      BASE_URL: ${{ vars.BASE_URL || secrets.BASE_URL }}
+      BASE_URL: ${{ vars.BASE_URL || secrets.BASE_URL || 'https://foodgram-frontend-1.foodgram.education-services.ru' }}
     steps:
       - uses: actions/checkout@v4
 

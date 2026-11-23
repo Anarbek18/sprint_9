@@ -9,6 +9,7 @@ ui-tests:
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
+    BASE_URL: "https://foodgram-frontend-1.foodgram.education-services.ru"
   before_script:
     - |
       if [ -z "$BASE_URL" ]; then
