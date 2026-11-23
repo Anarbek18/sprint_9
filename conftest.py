@@ -4,9 +4,9 @@ from selenium.webdriver.remote.file_detector import LocalFileDetector
 
 import config
 import data
+from helpers import api
 from pages.login_page import LoginPage
 from pages.main_page import MainPage
-from pages.registration_page import RegistrationPage
 
 
 @pytest.fixture
@@ -23,14 +23,8 @@ def driver():
 
 
 @pytest.fixture
-def registered_user(driver):
-    """Register a new user via UI so the account is fully usable for login."""
-    user = data.generate_user()
-    reg_page = RegistrationPage(driver)
-    reg_page.open_page()
-    reg_page.register(user)
-    # After registration the app redirects to the login page
-    return user
+def registered_user():
+    return api.create_user(data.generate_user())
 
 
 @pytest.fixture

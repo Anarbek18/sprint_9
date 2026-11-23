@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from locators.header_locators import HeaderLocators
 
-TIMEOUT = 10
+TIMEOUT = 15
 
 
 class BasePage:
@@ -23,7 +23,7 @@ class BasePage:
     def type_text(self, locator, text):
         element = self.wait_visible(locator)
         element.clear()
-        # React-controlled inputs often need native value setter + events
+        # React-controlled inputs need native value setter + events
         self.driver.execute_script(
             """
             const el = arguments[0];
@@ -41,7 +41,6 @@ class BasePage:
             element,
             text,
         )
-        # Also send_keys as fallback for non-React fields
         if element.get_attribute("value") != text:
             element.send_keys(text)
 
@@ -68,6 +67,15 @@ class BasePage:
             return True
         except Exception:
             return False
+
+    def dismiss_alert_if_present(self):
+        try:
+            alert = self.driver.switch_to.alert
+            text = alert.text
+            alert.accept()
+            return text
+        except Exception:
+            return None
 
     @allure.step("Нажать «Создать аккаунт» в шапке")
     def click_signup_link(self):
