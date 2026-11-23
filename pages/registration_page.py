@@ -1,8 +1,9 @@
 import allure
+from selenium.webdriver.support.ui import WebDriverWait
 
 import config
 from locators.registration_page_locators import RegistrationPageLocators as Locators
-from pages.base_page import BasePage
+from pages.base_page import BasePage, TIMEOUT
 
 
 class RegistrationPage(BasePage):
@@ -17,4 +18,7 @@ class RegistrationPage(BasePage):
         self.type_text(Locators.USERNAME_INPUT, user["username"])
         self.type_text(Locators.EMAIL_INPUT, user["email"])
         self.type_text(Locators.PASSWORD_INPUT, user["password"])
+        WebDriverWait(self.driver, TIMEOUT).until(
+            lambda d: d.find_element(*Locators.SUBMIT_BUTTON).is_enabled()
+        )
         self.click(Locators.SUBMIT_BUTTON)

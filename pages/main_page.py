@@ -1,4 +1,5 @@
 import allure
+import re
 
 import config
 from locators.header_locators import HeaderLocators
@@ -11,7 +12,9 @@ class MainPage(BasePage):
         self.open(config.BASE_URL)
 
     def is_main_page_opened(self):
-        return self.is_url_matching(config.BASE_URL + config.MAIN_URL_PATTERN)
+        # Match main page or recipes list (with or without trailing slash)
+        pattern = r"^" + re.escape(config.BASE_URL) + r"/(recipes/?)?$"
+        return self.is_url_matching(pattern)
 
     def is_logout_button_displayed(self):
         return self.is_visible(HeaderLocators.LOGOUT_LINK)

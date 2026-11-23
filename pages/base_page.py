@@ -21,7 +21,29 @@ class BasePage:
         WebDriverWait(self.driver, TIMEOUT).until(EC.element_to_be_clickable(locator)).click()
 
     def type_text(self, locator, text):
-        self.wait_visible(locator).send_keys(text)
+        element = self.wait_visible(locator)
+        element.clear()
+        # React-controlled inputs often need native value setter + events
+        self.driver.execute_script(
+            """
+            const el = arguments[0];
+            const value = arguments[1];
+            const lastValue = el.value;
+            el.value = value;
+            const event = new Event('input', { bubbles: true });
+            const tracker = el._valueTracker;
+            if (tracker) {
+                tracker.setValue(lastValue);
+            }
+            el.dispatchEvent(event);
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+            """,
+            element,
+            text,
+        )
+        # Also send_keys as fallback for non-React fields
+        if element.get_attribute("value") != text:
+            element.send_keys(text)
 
     def get_text(self, locator):
         return self.wait_visible(locator).text
