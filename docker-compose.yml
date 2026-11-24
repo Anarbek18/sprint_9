@@ -1,0 +1,25 @@
+services:
+  selenoid:
+    build: ./selenoid
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      # Selenoid по умолчанию ходит в Docker по API 1.24, а новые Docker требуют >= 1.40
+      DOCKER_API_VERSION: ${DOCKER_API_VERSION:-1.44}
+    command: ["-conf", "/etc/selenoid/browsers.json", "-container-network", "sprint9-net"]
+    ports:
+      - "4444:4444"
+
+  tests:
+    build: .
+    depends_on:
+      - selenoid
+    environment:
+      SELENIUM_URL: http://selenoid:4444/wd/hub
+      BASE_URL: ${BASE_URL:-https://foodgram-frontend-1.foodgram.education-services.ru}
+      # Необязательно: если API на другом адресе, чем BASE_URL с заменой frontend->backend
+      API_URL: ${API_URL:-}
+
+networks:
+  default:
+    name: sprint9-net
