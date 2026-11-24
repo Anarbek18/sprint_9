@@ -21,3 +21,4 @@ BASE_URL=https://<адрес сервиса> docker compose up --build --abort-o
 - GitLab: Settings → CI/CD → **Variables** → `BASE_URL`
 
 Пайплайны: `.github/workflows/ci.yml` и `.gitlab-ci.yml`. Отчёт Allure сохраняется как артефакт `allure_results`.
+тест
