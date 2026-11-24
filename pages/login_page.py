@@ -1,10 +1,8 @@
 import allure
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException
 
 import config
 from locators.login_page_locators import LoginPageLocators as Locators
-from pages.base_page import BasePage, TIMEOUT
+from pages.base_page import BasePage
 
 
 class LoginPage(BasePage):
@@ -16,28 +14,8 @@ class LoginPage(BasePage):
     def login(self, user):
         self.type_text(Locators.EMAIL_INPUT, user["email"])
         self.type_text(Locators.PASSWORD_INPUT, user["password"])
-        # Wait until the submit button is enabled (React form validation)
-        WebDriverWait(self.driver, TIMEOUT).until(
-            lambda d: d.find_element(*Locators.SUBMIT_BUTTON).is_enabled()
-        )
+        self.wait_until_enabled(Locators.SUBMIT_BUTTON)
         self.click(Locators.SUBMIT_BUTTON)
-
-        # Handle possible alert with login error
-        alert_text = self.dismiss_alert_if_present()
-        if alert_text:
-            raise AssertionError(f"Login failed with alert: {alert_text}")
-
-        try:
-            WebDriverWait(self.driver, TIMEOUT).until(
-                lambda d: "signin" not in d.current_url
-            )
-        except (TimeoutException, UnexpectedAlertPresentException) as e:
-            alert_text = self.dismiss_alert_if_present()
-            if alert_text:
-                raise AssertionError(f"Login failed with alert: {alert_text}") from e
-            raise AssertionError(
-                f"Login did not redirect from /signin. Current URL: {self.driver.current_url}"
-            ) from e
 
     def is_login_page_opened(self):
         return self.is_url_equal(config.LOGIN_URL)

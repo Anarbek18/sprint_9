@@ -44,6 +44,17 @@ class BasePage:
         if element.get_attribute("value") != text:
             element.send_keys(text)
 
+    def wait_until_enabled(self, locator):
+        return WebDriverWait(self.driver, TIMEOUT).until(EC.element_to_be_clickable(locator))
+
+    def upload_file(self, locator, path):
+        self.driver.find_element(*locator).send_keys(path)
+
+    @staticmethod
+    def format_locator(locator, *args):
+        by, value = locator
+        return by, value.format(*args)
+
     def get_text(self, locator):
         return self.wait_visible(locator).text
 
@@ -67,15 +78,6 @@ class BasePage:
             return True
         except Exception:
             return False
-
-    def dismiss_alert_if_present(self):
-        try:
-            alert = self.driver.switch_to.alert
-            text = alert.text
-            alert.accept()
-            return text
-        except Exception:
-            return None
 
     @allure.step("Нажать «Создать аккаунт» в шапке")
     def click_signup_link(self):

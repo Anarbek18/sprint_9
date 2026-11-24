@@ -1,5 +1,4 @@
 import allure
-from selenium.webdriver.common.by import By
 
 from locators.create_recipe_page_locators import CreateRecipePageLocators as Locators
 from pages.base_page import BasePage
@@ -8,7 +7,7 @@ from pages.base_page import BasePage
 class CreateRecipePage(BasePage):
     @allure.step("Выбрать тег рецепта")
     def select_tag(self, tag):
-        self.click((By.XPATH, Locators.TAG_LABEL.format(tag)))
+        self.click(self.format_locator(Locators.TAG_LABEL, tag))
 
     @allure.step("Добавить ингредиент из выпадающего списка")
     def add_ingredient(self, name_prefix, amount):
@@ -19,7 +18,7 @@ class CreateRecipePage(BasePage):
 
     @allure.step("Загрузить изображение рецепта")
     def upload_image(self, path):
-        self.driver.find_element(*Locators.IMAGE_INPUT).send_keys(path)
+        self.upload_file(Locators.IMAGE_INPUT, path)
 
     @allure.step("Заполнить форму создания рецепта и отправить")
     def create_recipe(self, name, tag, ingredient_prefix, amount, cooking_time, description, image_path):
